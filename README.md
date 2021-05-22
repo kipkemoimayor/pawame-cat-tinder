@@ -1,2 +1,2 @@
 # pawame-cat-tinder
-A cut tinder react web application
+A react tinder web application for cats
