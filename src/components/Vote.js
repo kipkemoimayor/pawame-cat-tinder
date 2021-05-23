@@ -23,6 +23,16 @@ export class Vote extends React.Component {
                         {/* Voting layout here*/}
                         <div className='card'>
                             <header>The Cat</header>
+                            <div className='card-body'>
+                                <div className='vote-btn'>
+                                    <button className='btn btn-outline-danger'>Dislike</button>
+                                    <button className='btn btn-outline-success'>Like</button>
+                                </div>
+
+                                <div className='img-top card-img'>
+                                    <img src='' className='img-responsive img-top card-top' alt='The cat' />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className='col-md-3'></div>

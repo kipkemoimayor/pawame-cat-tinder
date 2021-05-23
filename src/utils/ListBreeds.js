@@ -13,4 +13,15 @@ function ListBreeds(props) {
     });
 }
 
-export default ListBreeds;
+function GetData(props) {
+    let url = Object.assign({}, props.apiUrl);
+    return new Promise((resolve, reject) => {
+        fetch(url.apiUrl, request).then(response => {
+            resolve(response.json());
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+module.exports = { ListBreeds, GetData };
