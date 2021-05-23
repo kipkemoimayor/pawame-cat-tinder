@@ -17,7 +17,7 @@ export class CatsHome extends React.Component {
 
     async getBreeds() {
         let breeds = await ListBreeds(this.props).catch(e => {
-            console.log('error',e)
+            console.log('error', e)
         });
         console.log(breeds);
     }

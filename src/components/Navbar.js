@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 import { CatsHome } from "./CatsHome";
+import { Vote } from "./Vote";
 
 export class Navbar extends React.Component {
     render() {
@@ -45,9 +46,9 @@ export class Navbar extends React.Component {
                 </nav>
 
                 <Switch>
-                    {/* <Route exact path='/'>
-
-                        </Route> */}
+                    <Route exact path='/vote'>
+                        <Vote />
+                    </Route>
 
                     <Route path='/breeds'>
                         <CatsHome />
