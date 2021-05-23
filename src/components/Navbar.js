@@ -11,7 +11,7 @@ export class Navbar extends React.Component {
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" >
 
                     <Link className="navbar-brand" to="/">
-                        Mern
+                        Pawame Cats Tinder
         </Link>
 
 
@@ -46,8 +46,8 @@ export class Navbar extends React.Component {
                 </nav>
 
                 <Switch>
-                    <Route exact path='/vote'>
-                        <Vote />
+                    <Route path='/vote/:id' render={(props) => <Vote {...props} />}>
+                        {/* <Vote /> */}
                     </Route>
 
                     <Route path='/breeds'>

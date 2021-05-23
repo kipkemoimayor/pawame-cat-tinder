@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import '../styles/home-breeds.css';
 import { ListBreeds } from '../utils/ListBreeds';
@@ -39,7 +40,7 @@ export class CatsHome extends React.Component {
 
     render() {
         if (!this.state.errorState) {
-            const allBreeds = this.state.cats.slice(0, 10);
+            const allBreeds = this.state.cats.slice();
             return (
                 <div className='container custom-container'>
 
@@ -54,7 +55,7 @@ export class CatsHome extends React.Component {
                                             <header> <h6>{breed.name}</h6></header>
                                             <div className='card-body'>
                                                 <div className='img-holder'>
-                                                    <img src={breed.image.url} className='card-img' alt='The cat' />
+                                                    <img src={breed.image?breed.image.url:''} className='card-img' alt='The cat' />
                                                 </div>
 
                                                 <div className='description'>
@@ -71,7 +72,7 @@ export class CatsHome extends React.Component {
 
                                             <div className='card-footer'>
                                                 <div className='vote-btn'>
-                                                    <button className='btn btn-outline-success' title='View Details to like'>View Details</button>
+                                                    <Link className='btn btn-outline-success' to={`/vote/${breed.image?breed.image.id:''}`} title='View Details to like'>View Details</Link>
                                                 </div>
                                             </div>
                                         </div>
