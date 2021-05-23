@@ -1,13 +1,16 @@
 
 const request = {
-    headers: { 'x-api-key': '727fe739-d55b-4ebd-a8af-8d591c4adcb5' }
+    headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '727fe739-d55b-4ebd-a8af-8d591c4adcb5'
+    }
 };
 
 const apiUrls = {
     breedsUrl: 'https://api.thecatapi.com/v1/breeds',
     catDetailUrl: 'https://api.thecatapi.com/v1/images/',
     allImageUrl: 'https://api.thecatapi.com/v1/images/search',
-    voteUrl: 'https://api.thecatapi.com/v1/votes'
+    voteUrl: 'https://api.thecatapi.com/v1/votes/'
 };
 
 function ListBreeds(props) {
@@ -41,19 +44,21 @@ function GetCatDetails(id) {
     });
 }
 
-function SubVote(data) {
+async function SubVote(data) {
     let params = {
         method: 'POST',
-        body: data
-    }
+        body: JSON.stringify(data)
+    };
     let requestCopy = Object.assign(params, request);
-    return new Promise((resolve, reject) => {
+    console.log(requestCopy);
+    return await new Promise((resolve, reject) => {
         fetch(apiUrls.voteUrl, requestCopy).then(response => {
             resolve(response.json());
         }).catch(error => {
             reject(error);
         });
     });
+
 }
 
 module.exports = { ListBreeds, GetData, GetCatDetails, SubVote };

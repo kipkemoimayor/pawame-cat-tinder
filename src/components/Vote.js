@@ -18,7 +18,6 @@ export class Vote extends React.Component {
             errorState: false,
             errorMsg: ''
         };
-        this.upVote = this.upVote.bind(this);
     }
 
     componentDidMount() {
@@ -30,18 +29,20 @@ export class Vote extends React.Component {
 
     }
 
-    upVote(catId) {
-        let postData = {
-            image_id: catId,
-            value: 1
-        };
+    async userVote(dT, e) {
+        e.preventDefault();
+        let data = Object.assign({}, dT);
 
-        SubVote(postData).then(response => {
+        console.log(data);
+        await SubVote(data).then(response => {
             // success msg
-        }).catch(eror => {
+            console.log(response);
+        }).catch(error => {
             // reason 
+            console.log(error);
         });
     }
+
 
     async getCatDetails(catId) {
         let catDetails = await GetCatDetails(catId).catch(error => {
@@ -79,8 +80,8 @@ export class Vote extends React.Component {
                                     <header>{this.state.cat.detials.name}</header>
                                     <div className='card-body'>
                                         <div className='vote-btn'>
-                                            <button className='btn btn-outline-danger'>Dislike</button>
-                                            <button onClick={this.upVote(this.state.cat.detials.id)} className='btn btn-outline-success'>Like</button>
+                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 0 }, e)} className='btn btn-outline-danger'>Dislike</button>
+                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 1 }, e)} className='btn btn-outline-success'>Like</button>
                                         </div>
 
                                         <div className='img-card'>
