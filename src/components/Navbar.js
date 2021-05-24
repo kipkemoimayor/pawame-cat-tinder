@@ -53,7 +53,7 @@ export class Navbar extends React.Component {
                     <Route path='/favorite'>
                         <Favorite />
                     </Route>
-                    <Route path='/'>
+                    <Route exact path='/'>
                         <CatsHome />
                     </Route>
                 </Switch>
