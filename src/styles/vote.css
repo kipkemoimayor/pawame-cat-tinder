@@ -5,3 +5,7 @@
 .vote-btn>* {
     margin: 0.5em;
 }
+
+.material-icons {
+    vertical-align: middle;
+}

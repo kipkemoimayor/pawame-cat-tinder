@@ -6,7 +6,7 @@ import '../styles/vote.css';
 // data service import
 
 import { GetCatDetails, SubVote, ListBreeds } from '../utils/ListBreeds';
-import { SaveVotesToLocalStorage, checkIfExist, getNextCat } from '../utils/Common';
+import { SaveVotesToLocalStorage, checkIfExist, getNextCat, addToFavToLocalStorage, removeFavFromStorage } from '../utils/Common';
 import { Error } from '../components/Error';
 import Loader from "./Loader";
 
@@ -19,7 +19,11 @@ export class Vote extends React.Component {
             allBreeds: [],
             errorState: false,
             errorMsg: '',
-            currentImageIndex: 0
+            currentImageIndex: 0,
+            favStatus: {
+                image_id: null,
+                status: false
+            }
         };
     }
 
@@ -85,9 +89,8 @@ export class Vote extends React.Component {
 
         // before fetching first check if cat has likes
         let hasVotes = checkIfExist(catId);
-        console.log(hasVotes);
         if (hasVotes) {
-            if(this.state.allBreeds.length){
+            if (this.state.allBreeds.length) {
                 catId = getNextCat(this.state.allBreeds, this.state.currentImageIndex).image.id;
             }
         }
@@ -106,7 +109,13 @@ export class Vote extends React.Component {
             }
         }));
 
-        console.log(this.state.cat);
+        // CHECK FAV
+
+        const favFound = checkIfExist(this.state.cat.other.id, 'fav');
+        console.log(favFound);
+        if (favFound) {
+            this.changeFavState(this.state.cat.other.id);
+        }
 
     }
 
@@ -125,6 +134,35 @@ export class Vote extends React.Component {
     }
 
 
+    addToFav(imgId, e) {
+        e.preventDefault();
+        // save to local storage
+
+        // first check if exsit to avoid saving dups
+        const found = checkIfExist(imgId.image_id, 'fav');
+        if (!found) {
+            // continue
+            const favData = Object.assign({}, imgId);
+
+            addToFavToLocalStorage(favData);
+
+            this.changeFavState(imgId.image_id);
+        } else {
+            removeFavFromStorage(imgId.image_id);
+            this.changeFavState(imgId.image_id, false);
+        }
+    }
+
+    changeFavState(imgId, status = true) {
+        this.setState(state => ({
+            favStatus: {
+                image_id: imgId,
+                status: status
+            }
+        }));
+    }
+
+
     render() {
 
         if (!this.state.errorState) {
@@ -140,8 +178,16 @@ export class Vote extends React.Component {
                                     <header>{this.state.cat.detials.name}</header>
                                     <div className='card-body'>
                                         <div className='vote-btn'>
-                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 0 }, e)} className='btn btn-outline-danger'>Dislike</button>
-                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 1 }, e)} className='btn btn-outline-success'>Like</button>
+                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 0 }, e)} className='btn btn-outline-danger'>
+                                                <span className="material-icons">
+                                                    thumb_down
+                                                </span> Dislike
+                                            </button>
+                                            <button onClick={(e) => this.userVote({ image_id: this.state.cat.other.id, value: 1 }, e)} className='btn btn-outline-success'>
+                                                <span className="material-icons">
+                                                    thumb_up
+                                                </span>Like
+                                            </button>
                                         </div>
 
                                         <div className='img-card'>
@@ -150,7 +196,11 @@ export class Vote extends React.Component {
                                     </div>
                                     <div className='card-footer'>
                                         <div className='vote-btn'>
-                                            <button className='btn btn-outline-success' title='View Details to like'>Add To Fav</button>
+                                            <button onClick={(e) => this.addToFav({ image_id: this.state.cat.other.id }, e)} className='btn btn-outline-success' title='Add To Favourite'>
+                                                <span className="material-icons">
+                                                    {this.state.favStatus.image_id === this.state.cat.other.id && this.state.favStatus.status ? 'favorite' : 'favorite_border'}
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
