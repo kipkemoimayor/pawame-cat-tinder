@@ -37,7 +37,7 @@ export class Navbar extends React.Component {
                             </li>
 
                             <li className="nav-item active">
-                                <Link className="nav-link" to="/breeds">
+                                <Link className="nav-link" to="/">
                                     Breeds <span className="sr-only"></span>
                                 </Link>
 
@@ -50,13 +50,11 @@ export class Navbar extends React.Component {
                     <Route path='/vote/:id' render={(props) => <Vote {...props} />}>
                         {/* <Vote /> */}
                     </Route>
-
-                    <Route path='/breeds'>
-                        <CatsHome />
-                    </Route>
-
                     <Route path='/favorite'>
                         <Favorite />
+                    </Route>
+                    <Route path='/'>
+                        <CatsHome />
                     </Route>
                 </Switch>
             </Router>
