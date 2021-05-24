@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 import { CatsHome } from "./CatsHome";
 import { Vote } from "./Vote";
+import Favorite from '../components/Favorite';
 
 export class Navbar extends React.Component {
     render() {
@@ -12,7 +13,7 @@ export class Navbar extends React.Component {
 
                     <Link className="navbar-brand" to="/">
                         Pawame Cats Tinder
-        </Link>
+                    </Link>
 
 
                     <button
@@ -30,8 +31,8 @@ export class Navbar extends React.Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
-                                <Link className="nav-link" to="/vote">
-                                    Vote <span className="sr-only"></span>
+                                <Link className="nav-link" to="/favorite">
+                                    Favorites <span className="sr-only"></span>
                                 </Link>
                             </li>
 
@@ -52,6 +53,10 @@ export class Navbar extends React.Component {
 
                     <Route path='/breeds'>
                         <CatsHome />
+                    </Route>
+
+                    <Route path='/favorite'>
+                        <Favorite />
                     </Route>
                 </Switch>
             </Router>
