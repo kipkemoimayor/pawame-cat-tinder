@@ -5,7 +5,8 @@ import '../styles/vote.css';
 
 // data service import
 
-import { GetCatDetails, SubVote } from '../utils/ListBreeds';
+import { GetCatDetails, SubVote, ListBreeds } from '../utils/ListBreeds';
+import { SaveVotesToLocalStorage, checkIfExist, getNextCat } from '../utils/Common';
 import { Error } from '../components/Error';
 import Loader from "./Loader";
 
@@ -15,14 +16,19 @@ export class Vote extends React.Component {
         super(props);
         this.state = {
             cat: null,
+            allBreeds: [],
             errorState: false,
-            errorMsg: ''
+            errorMsg: '',
+            currentImageIndex: 0
         };
     }
 
     componentDidMount() {
         const { id } = this.props.match.params;
         this.getCatDetails(id);
+
+        // get all breeds
+        this.getBreeds();
     }
 
     componentDidUnMount() {
@@ -37,6 +43,37 @@ export class Vote extends React.Component {
         await SubVote(data).then(response => {
             // success msg
             console.log(response);
+            // move to next breed
+            const vData = {
+                image_id: dT.image_id,
+                vote_id: response.id,
+                value: dT.value
+            };
+            SaveVotesToLocalStorage(vData).then(_ => {
+                // got to the next image
+                // check if next cat img is already liked
+                let catId = this.state.allBreeds[this.state.currentImageIndex].image.id;
+                let catVoteExist = checkIfExist(catId);
+                if (catVoteExist) {
+                    // get next cat in the queue
+                    console.log('This is exist');
+                    let nextCat = getNextCat(this.state.allBreeds, this.state.currentImageIndex);
+                    console.log(this.nextCat);
+                    this.getCatDetails(nextCat.image.id);
+                    this.props.history.push('/vote/' + catId);
+                    // this.props.
+                } else {
+                    // cat has no vote 
+                    console.log('Cat has no votes');
+                    this.getCatDetails(this.state.allBreeds[this.state.currentImageIndex].image.id);
+                    this.props.history.push('/vote/' + catId);
+                }
+
+                this.setState(state => ({
+                    currentImageIndex: this.state.currentImageIndex += 1
+                }));
+
+            });
         }).catch(error => {
             // reason 
             console.log(error);
@@ -45,6 +82,15 @@ export class Vote extends React.Component {
 
 
     async getCatDetails(catId) {
+
+        // before fetching first check if cat has likes
+        let hasVotes = checkIfExist(catId);
+        console.log(hasVotes);
+        if (hasVotes) {
+            if(this.state.allBreeds.length){
+                catId = getNextCat(this.state.allBreeds, this.state.currentImageIndex).image.id;
+            }
+        }
         let catDetails = await GetCatDetails(catId).catch(error => {
             this.setState(state => ({
                 errorState: true,
@@ -62,6 +108,20 @@ export class Vote extends React.Component {
 
         console.log(this.state.cat);
 
+    }
+
+    async getBreeds() {
+        let breeds = await ListBreeds(this.props).catch(e => {
+            console.log('error', e);
+            this.setState(state => ({
+                cats: [],
+            }));
+
+        });
+        this.setState(state => ({
+            allBreeds: breeds
+        }));
+        console.log(breeds);
     }
 
 
